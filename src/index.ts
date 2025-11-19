@@ -22,7 +22,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // router
-app.use('/', appRouter)
+app.use('/api/v1/', appRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -45,7 +45,7 @@ global._io = io
 global._io.on('connection', ChatServices.connection)
 
 server.listen(process.env.PORT, () => {
-  console.log('Server running...')
+  console.log('Server running at port ' + process.env.PORT)
 })
 
 export { app, server }
