@@ -8,6 +8,6 @@ const poolConnection = mysql.createPool({
   database: process.env.DATABASE_NAME ?? ''
 })
 
-const db = drizzle(poolConnection)
+const db = drizzle(poolConnection, { casing: 'snake_case' })
 
 export default db
