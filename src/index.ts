@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import 'dotenv/config'
 import express, { NextFunction, Request, Response } from 'express'
 import { createServer } from 'http'
@@ -7,6 +8,7 @@ import createError from 'http-errors'
 import logger from 'morgan'
 import path from 'path'
 import appRouter from './routes'
+import { corsOptions } from './utils/configs'
 
 const app = express()
 
@@ -16,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(cors(corsOptions))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // router
