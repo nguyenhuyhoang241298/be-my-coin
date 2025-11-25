@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted 
+    runs-on: self-hosted
 
     env:
       PORT: 8080
@@ -30,4 +30,10 @@ jobs:
             --name be-my-coin \
             -p 8080:8080 \
             -e PORT=${{ env.PORT }} \
+            -e HOST=${{ secrets.DB_HOST }} \
+            -e USER_DB=${{ secrets.DB_USER }} \
+            -e PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DATABASE_NAME=${{ secrets.DB_NAME }} \
+            -e PASSWORD_SECRET=${{ secrets.PASSWORD_SECRET }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             be-my-coin:latest
