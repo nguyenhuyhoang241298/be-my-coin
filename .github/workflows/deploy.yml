@@ -29,5 +29,5 @@ jobs:
           docker run -d \
             --name be-my-coin \
             -p 8080:8080 \
-            -e PORT=${env.PORT} \
+            -e PORT=${{ env.PORT }} \
             be-my-coin:latest
