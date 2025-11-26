@@ -8,7 +8,6 @@ import createError from 'http-errors'
 import logger from 'morgan'
 import path from 'path'
 import appRouter from './routes'
-import { sendEmail } from './services/email.services'
 import { corsOptions } from './utils/configs'
 
 const app = express()
@@ -43,12 +42,6 @@ const server = createServer(app)
 
 server.listen(process.env.PORT, async () => {
   console.log('Server running at port ' + process.env.PORT)
-
-  await sendEmail({
-    to: 'nguyenhuyhoang241298@gmail.com',
-    subject: 'Test Email',
-    html: '<h1>Hello from Be My Coin!</h1>'
-  })
 })
 
 export { app, server }
