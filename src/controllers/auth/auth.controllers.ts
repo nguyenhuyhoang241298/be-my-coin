@@ -2,6 +2,7 @@ import express from 'express'
 import { getUserByEmail, insertUser } from '~/services/users.services'
 import { authentication, random } from '~/utils/crypto'
 import generateToken from '~/utils/jwt'
+import { NewUserDTO } from './dto'
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
@@ -33,9 +34,13 @@ export const login = async (req: express.Request, res: express.Response) => {
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
-    const { email, password, fullName, phone } = req.body
+    const dto = NewUserDTO.safeParse(req.body)
 
-    if (!email || !password) return res.sendStatus(400)
+    if (!dto.success) {
+      return res.status(400).json({ error: dto.error })
+    }
+
+    const { fullName, phone, email, password } = dto.data
 
     const usersExisted = await getUserByEmail(email)
 
