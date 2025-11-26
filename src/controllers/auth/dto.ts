@@ -6,3 +6,8 @@ export const NewUserDTO = z.object({
   email: z.string().email(),
   password: z.string().min(6)
 })
+
+export const OtpDTO = z.object({
+  otp: z.string().length(6),
+  email: z.string().email()
+})

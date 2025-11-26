@@ -36,4 +36,5 @@ jobs:
             -e DATABASE_NAME=${{ secrets.DB_NAME }} \
             -e PASSWORD_SECRET=${{ secrets.PASSWORD_SECRET }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} \
             be-my-coin:latest

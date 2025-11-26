@@ -40,7 +40,7 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 
 const server = createServer(app)
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, async () => {
   console.log('Server running at port ' + process.env.PORT)
 })
 
