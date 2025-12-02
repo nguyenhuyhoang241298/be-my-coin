@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 
 export const authentication = (salt: string, password: string): string => {
   return crypto

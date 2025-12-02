@@ -2,12 +2,17 @@ import express from 'express'
 import { getUserByEmail } from '~/services/users.services'
 import { authentication } from '~/utils/crypto'
 import generateToken from '~/utils/jwt'
+import { UserLoginDTO } from './dto'
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
-    const { email, password } = req.body
+    const dto = UserLoginDTO.safeParse(req.body)
 
-    if (!email || !password) return res.sendStatus(400)
+    if (!dto.success) {
+      return res.status(400).json({ error: dto.error })
+    }
+
+    const { email, password } = dto.data
 
     const users = await getUserByEmail(email)
 
@@ -21,9 +26,11 @@ export const login = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(403)
     }
 
+    const accessToken = generateToken(other.id)
+
     return res.status(200).json({
       user: other,
-      accessToken: generateToken(other.id)
+      accessToken
     })
   } catch (e) {
     console.log(e)
