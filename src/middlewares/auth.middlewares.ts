@@ -1,31 +1,20 @@
+import { COOKIE_KEYS } from '~/constants/cookie'
 import { getUserById } from '~/services/users.services'
 import { createHandler } from '~/utils/create'
 import { BackendError } from '~/utils/errors'
 import { verifyToken } from '~/utils/jwt'
 
-export function isAuthenticated(
-  { verifyAdmin } = {
-    verifyAdmin: false
-  }
-) {
+export function isAuthenticated() {
   return createHandler(async (req, res, next) => {
-    const { authorization } = req.headers
+    const accessToken = req.cookies[COOKIE_KEYS.ACCESS_TOKEN]
 
-    if (!authorization) {
-      throw new BackendError('UNAUTHORIZED', {
-        message: 'Authorization header not found'
-      })
-    }
-
-    const token = authorization.split(' ')[1]
-
-    if (!token) {
+    if (!accessToken) {
       throw new BackendError('UNAUTHORIZED', {
         message: 'Token not found'
       })
     }
 
-    const { userId } = verifyToken(token)
+    const { userId } = verifyToken(accessToken)
 
     const user = await getUserById(userId)
 
