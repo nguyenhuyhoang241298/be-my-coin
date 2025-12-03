@@ -1,8 +1,10 @@
 import express from 'express'
+import { insertRefreshToken } from '~/services/refreshToken.services'
 import { getUserByEmail } from '~/services/users.services'
-import { authentication } from '~/utils/crypto'
-import generateToken from '~/utils/jwt'
+import { authentication, random } from '~/utils/crypto'
+import generateJWTToken from '~/utils/jwt'
 import { UserLoginDTO } from './dto'
+import { generateRefreshTokenData } from './helper'
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
@@ -26,11 +28,15 @@ export const login = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(403)
     }
 
-    const accessToken = generateToken(other.id)
+    const refreshToken = random()
+    const newRefreshTokenData = generateRefreshTokenData(other.id, refreshToken)
+
+    await insertRefreshToken(newRefreshTokenData)
 
     return res.status(200).json({
       user: other,
-      accessToken
+      accessToken: generateJWTToken(other.id),
+      refreshToken
     })
   } catch (e) {
     console.log(e)

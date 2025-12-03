@@ -2,7 +2,7 @@ import { COOKIE_KEYS } from '~/constants/cookie'
 import { getUserById } from '~/services/users.services'
 import { createHandler } from '~/utils/create'
 import { BackendError } from '~/utils/errors'
-import { verifyToken } from '~/utils/jwt'
+import { verifyJWTToken } from '~/utils/jwt'
 
 export function isAuthenticated() {
   return createHandler(async (req, res, next) => {
@@ -14,7 +14,7 @@ export function isAuthenticated() {
       })
     }
 
-    const { userId } = verifyToken(accessToken)
+    const { userId } = verifyJWTToken(accessToken)
 
     const user = await getUserById(userId)
 
