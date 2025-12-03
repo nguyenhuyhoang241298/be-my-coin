@@ -3,16 +3,16 @@ import process from 'node:process'
 import { BackendError } from './errors'
 
 const JWT_CONFIG: JWT.SignOptions = {
-  expiresIn: '10m'
+  expiresIn: '30m'
 }
 
 const jwtSecret = process.env.JWT_SECRET ?? ''
 
-export default function generateToken(userId: number): string {
+export default function generateJWTToken(userId: number): string {
   return JWT.sign({ userId }, jwtSecret, JWT_CONFIG)
 }
 
-export function verifyToken(token: string) {
+export function verifyJWTToken(token: string) {
   try {
     const data = JWT.verify(token, jwtSecret)
 
@@ -27,5 +27,18 @@ export function verifyToken(token: string) {
     throw new BackendError('UNAUTHORIZED', {
       message: 'Invalid token'
     })
+  }
+}
+
+export function verifyJWTIgnoreExpiration(token: string) {
+  try {
+    const data = JWT.verify(token, jwtSecret, { ignoreExpiration: true })
+    const userId = (data as { userId: number }).userId
+
+    if (typeof userId === 'number') return userId
+
+    return undefined
+  } catch (err) {
+    return undefined
   }
 }
