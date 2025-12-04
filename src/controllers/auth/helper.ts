@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
-import { RefreshToken } from '~/models/schemas/refreshToken'
+import { NewRefreshToken } from '~/models/schemas/refreshToken'
 
-export const generateRefreshTokenData = (userId: number, token: string): RefreshToken => {
+export const generateRefreshTokenData = (userId: number, token: string): NewRefreshToken => {
   return {
     token: hashRefreshToken(token),
     userId,
