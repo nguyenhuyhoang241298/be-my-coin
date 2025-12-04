@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm'
 import db from '~/models'
-import { NewRefreshToken, RefreshToken, refreshTokens } from '~/models/schemas/refreshToken'
+import { NewRefreshToken, refreshTokens } from '~/models/schemas/refreshToken'
 
 export const getRefreshToken = async (refreshToken: string, userId: number) => {
   return db
@@ -13,6 +13,6 @@ export const insertRefreshToken = async (refreshData: NewRefreshToken) => {
   return db.insert(refreshTokens).values(refreshData)
 }
 
-export const updateRefreshToken = async (userId: number, refreshData: RefreshToken) => {
+export const updateRefreshToken = async (userId: number, refreshData: NewRefreshToken) => {
   return db.update(refreshTokens).set(refreshData).where(eq(refreshTokens.userId, userId))
 }
