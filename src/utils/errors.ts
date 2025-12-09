@@ -126,18 +126,18 @@ export function errorHandler(
   const url = req.originalUrl
   const method = req.method
 
-  if (error instanceof BackendError) {
-    message = error.message
-    code = error.code
-    details = error.details
-    statusCode = getStatusFromErrorCode(code)
-  }
-
   if (error instanceof Error) {
     code = 'INTERNAL_ERROR'
     message = "The DB crashed maybe because they don't like you :p"
     statusCode = getStatusFromErrorCode(code)
     details = error
+  }
+
+  if (error instanceof BackendError) {
+    message = error.message
+    code = error.code
+    details = error.details
+    statusCode = getStatusFromErrorCode(code)
   }
 
   if (error instanceof ZodError) {

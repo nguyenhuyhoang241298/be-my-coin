@@ -16,3 +16,7 @@ export const insertRefreshToken = async (refreshData: NewRefreshToken) => {
 export const updateRefreshToken = async (userId: number, refreshData: NewRefreshToken) => {
   return db.update(refreshTokens).set(refreshData).where(eq(refreshTokens.userId, userId))
 }
+
+export const deleteRefreshToken = async (userId: number, refreshToken: string) => {
+  return db.delete(refreshTokens).where(and(eq(refreshTokens.userId, userId), eq(refreshTokens.token, refreshToken)))
+}

@@ -2,7 +2,7 @@ import express from 'express'
 import { insertRefreshToken } from '~/services/refreshToken.services'
 import { getUserByEmail } from '~/services/users.services'
 import { authentication, random } from '~/utils/crypto'
-import generateJWTToken from '~/utils/jwt'
+import generateJWTToken, { getTokenTimestamps } from '~/utils/jwt'
 import { UserLoginDTO } from './dto'
 import { generateRefreshTokenData } from './helper'
 
@@ -29,14 +29,16 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     const refreshToken = random()
+    const accessToken = generateJWTToken(other.id)
     const newRefreshTokenData = generateRefreshTokenData(other.id, refreshToken)
 
     await insertRefreshToken(newRefreshTokenData)
 
     return res.status(200).json({
       user: other,
-      accessToken: generateJWTToken(other.id),
-      refreshToken
+      accessToken,
+      refreshToken,
+      ...getTokenTimestamps(accessToken)
     })
   } catch (e) {
     console.log(e)
