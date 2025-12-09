@@ -12,6 +12,14 @@ export default function generateJWTToken(userId: number): string {
   return JWT.sign({ userId }, jwtSecret, JWT_CONFIG)
 }
 
+export function getTokenTimestamps(token: string) {
+  const decoded = JWT.decode(token) as JWT.JwtPayload
+  return {
+    issuedAt: (decoded.iat ?? 0) * 1000,
+    expiresAt: (decoded.exp ?? 0) * 1000
+  }
+}
+
 export function verifyJWTToken(token: string) {
   try {
     const data = JWT.verify(token, jwtSecret)

@@ -1,3 +1,5 @@
 export const COOKIE_KEYS = {
-  ACCESS_TOKEN: 'accessToken'
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+  EXPIRES_AT: 'expiresAt'
 }

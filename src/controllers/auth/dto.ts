@@ -21,3 +21,8 @@ export const RefreshTokenDTO = z.object({
   refreshToken: z.string().min(1),
   accessToken: z.string().min(1)
 })
+
+export const LogoutDTO = z.object({
+  refreshToken: z.string().min(1),
+  accessToken: z.string().min(1)
+})
