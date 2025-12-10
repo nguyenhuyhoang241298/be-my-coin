@@ -25,13 +25,11 @@ export const googleLogin = async (req: express.Request, res: express.Response) =
     })
     const payload = ticket.getPayload()
 
-    console.log('payload', payload)
-
     if (!payload || payload?.aud !== process.env.GOOGLE_CLIENT_ID || !payload?.email) {
       return res.sendStatus(401)
     }
 
-    const { email, name } = payload
+    const { email, name, picture } = payload
 
     const existUsers = await getUserByEmail(email)
 
@@ -48,7 +46,8 @@ export const googleLogin = async (req: express.Request, res: express.Response) =
         password: authentication(salt, DEFAULT_PASSWORD),
         salt,
         isEmailVerified: true,
-        otp
+        otp,
+        image: picture
       })
 
       userId = result[0].id
@@ -66,7 +65,8 @@ export const googleLogin = async (req: express.Request, res: express.Response) =
       user: {
         id: userId,
         email,
-        fullName: name
+        fullName: name,
+        image: picture
       },
       accessToken,
       refreshToken,
