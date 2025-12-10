@@ -12,6 +12,8 @@ export const UserLoginDTO = z.object({
   password: z.string().min(6)
 })
 
+export const GoogleLoginDTO = z.string().min(7)
+
 export const OtpDTO = z.object({
   otp: z.string().length(6),
   email: z.string().email()
