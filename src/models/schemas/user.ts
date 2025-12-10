@@ -8,7 +8,8 @@ export const users = mysqlTable('users', {
   password: varchar('password', { length: 256 }).notNull(),
   salt: text('salt').notNull(),
   isEmailVerified: boolean('is_email_verified').notNull().default(false),
-  otp: varchar('otp', { length: 6 }).notNull()
+  otp: varchar('otp', { length: 6 }).notNull(),
+  image: varchar('image', { length: 512 })
 })
 
 export type User = typeof users.$inferSelect
