@@ -10,6 +10,10 @@ export const insertUser = async (newUser: NewUser) => {
   return await db.insert(users).values(newUser)
 }
 
+export const insertUserReturnId = async (newUser: NewUser) => {
+  return await db.insert(users).values(newUser).$returningId()
+}
+
 export const updateUserById = async (id: number, updateUser: User) => {
   return await db.update(users).set(updateUser).where(eq(users.id, id))
 }

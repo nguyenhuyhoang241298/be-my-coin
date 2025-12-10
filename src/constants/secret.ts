@@ -1,0 +1,1 @@
+export const DEFAULT_PASSWORD = '12345678@Abc'
