@@ -37,4 +37,6 @@ jobs:
             -e PASSWORD_SECRET=${{ secrets.PASSWORD_SECRET }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} \
+            -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             be-my-coin:latest
