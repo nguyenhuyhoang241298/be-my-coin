@@ -25,6 +25,8 @@ export const googleLogin = async (req: express.Request, res: express.Response) =
     })
     const payload = ticket.getPayload()
 
+    console.log('payload', payload)
+
     if (!payload || payload?.aud !== process.env.GOOGLE_CLIENT_ID || !payload?.email) {
       return res.sendStatus(401)
     }
