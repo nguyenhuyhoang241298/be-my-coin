@@ -9,7 +9,9 @@ export const users = mysqlTable('users', {
   salt: text('salt').notNull(),
   isEmailVerified: boolean('is_email_verified').notNull().default(false),
   otp: varchar('otp', { length: 6 }).notNull(),
-  image: varchar('image', { length: 512 })
+  image: varchar('image', { length: 512 }),
+  twoFAEnabled: boolean('two_fa_enabled').notNull().default(false),
+  twoFASecret: text('two_fa_secret')
 })
 
 export type User = typeof users.$inferSelect
