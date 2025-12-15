@@ -29,6 +29,15 @@ export const OtpDTO = z.object({
   email: z.string().email()
 })
 
+export const RequestMagicLinkDTO = z.object({
+  email: z.string().email()
+})
+
+export const VerifyMagicLinkDTO = z.object({
+  email: z.string().email(),
+  accessToken: z.string().min(1)
+})
+
 export const RefreshTokenDTO = z.object({
   refreshToken: z.string().min(1),
   accessToken: z.string().min(1)
