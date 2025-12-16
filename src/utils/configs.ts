@@ -5,6 +5,6 @@ export const corsOptions = {
 
 export const passkeyRPConfigs = {
   rpName: 'Be My Coin',
-  rpID: process.env.NODE_ENV === 'development' ? 'localhost' : 'huyhoang.me',
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://huyhoang.me'
+  rpID: process.env.NODE_ENV === 'production' ? 'huyhoang.me' : 'localhost',
+  origin: process.env.NODE_ENV === 'production' ? 'https://huyhoang.me' : 'http://localhost:3000'
 }

@@ -1,6 +1,5 @@
 import {
   bigint,
-  binary,
   boolean,
   index,
   mysqlTable,
@@ -8,6 +7,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  varbinary,
   varchar
 } from 'drizzle-orm/mysql-core'
 import { users } from './user'
@@ -16,7 +16,7 @@ export const passkeys = mysqlTable(
   'passkeys',
   {
     id: varchar('id', { length: 512 }).primaryKey(),
-    publicKey: binary('public_key').notNull(),
+    publicKey: varbinary('public_key', { length: 255 }).notNull(),
     userId: serial('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),

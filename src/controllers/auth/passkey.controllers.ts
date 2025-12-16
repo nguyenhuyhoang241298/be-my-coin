@@ -2,6 +2,8 @@ import {
   AuthenticatorTransportFuture,
   generateAuthenticationOptions,
   generateRegistrationOptions,
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON,
   verifyAuthenticationResponse,
   verifyRegistrationResponse
 } from '@simplewebauthn/server'
@@ -41,11 +43,9 @@ export const getPasskeyOptions = async (req: express.Request, res: express.Respo
 
     await saveRegistrationChallenge(user.id, options.challenge)
 
-    return res.status(200).json({
-      options
-    })
+    return res.status(200).json(options)
   } catch (error) {
-    console.error(error)
+    console.error('getPasskeyOptions error', error)
     return res.status(400).send({ error: error })
   }
 }
@@ -76,7 +76,7 @@ export const verifyRegistration = async (req: express.Request, res: express.Resp
 
     const newPasskey: NewPasskey = {
       userId: user.id,
-      webAuthnUserID: user.id,
+      webauthnUserId: user.id.toString(),
       id: credential.id,
       // @ts-ignore
       publicKey: Buffer.from(credential.publicKey),
@@ -90,7 +90,7 @@ export const verifyRegistration = async (req: express.Request, res: express.Resp
 
     return res.status(200).json({ verified })
   } catch (error) {
-    console.error(error)
+    console.error('verifyRegistration error', error)
     return res.status(400).send({ error: error })
   }
 }
