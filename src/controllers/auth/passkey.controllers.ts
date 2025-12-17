@@ -11,14 +11,17 @@ import express from 'express'
 import { NewPasskey, Passkey } from '~/models/schemas/passkey'
 import { User } from '~/models/schemas/user'
 import {
-  getRegistrationChallenge,
+  getAuthenticationByUserId,
+  getRegistrationByUserId,
   getUserPasskeys,
+  saveAuthenticationChallenge,
   saveRegistrationChallenge,
   saveUpdatedCounter,
   saveUserPasskey
 } from '~/services/passkey.services'
 import { getUserByEmail } from '~/services/users.services'
 import { passkeyRPConfigs } from '~/utils/configs'
+import generateJWTToken from '~/utils/jwt'
 import { GetAuthenticationOptionsDTO, VerifyAuthenticationDTO } from './dto'
 
 export const getPasskeyOptions = async (req: express.Request, res: express.Response) => {
@@ -41,7 +44,7 @@ export const getPasskeyOptions = async (req: express.Request, res: express.Respo
       }
     })
 
-    await saveRegistrationChallenge(user.id, options.challenge)
+    await saveRegistrationChallenge(user.id, options.challenge, options.user.id)
 
     return res.status(200).json(options)
   } catch (error) {
@@ -53,7 +56,7 @@ export const getPasskeyOptions = async (req: express.Request, res: express.Respo
 export const verifyRegistration = async (req: express.Request, res: express.Response) => {
   try {
     const user: User = res.locals.user
-    const currentOptions = await getRegistrationChallenge(user.id)
+    const currentOptions = await getRegistrationByUserId(user.id)
 
     if (!currentOptions) {
       return res.status(400).json({ message: 'No registration challenge found or challenge expired' })
@@ -61,7 +64,7 @@ export const verifyRegistration = async (req: express.Request, res: express.Resp
 
     const verification = await verifyRegistrationResponse({
       response: req.body,
-      expectedChallenge: currentOptions,
+      expectedChallenge: currentOptions.challenge,
       expectedOrigin: passkeyRPConfigs.origin,
       expectedRPID: passkeyRPConfigs.rpID
     })
@@ -76,10 +79,10 @@ export const verifyRegistration = async (req: express.Request, res: express.Resp
 
     const newPasskey: NewPasskey = {
       userId: user.id,
-      webauthnUserId: user.id.toString(),
+      webauthnUserId: currentOptions.optionUserId,
       id: credential.id,
       // @ts-ignore
-      publicKey: Buffer.from(credential.publicKey),
+      publicKey: Buffer.from(credential.publicKey).toString('hex'),
       counter: credential.counter,
       transports: credential.transports?.join(',') || null,
       deviceType: credentialDeviceType,
@@ -121,9 +124,9 @@ export const getAuthenticationOptions = async (req: express.Request, res: expres
       }))
     })
 
-    await saveRegistrationChallenge(id, options.challenge)
+    await saveAuthenticationChallenge(id, options.challenge)
 
-    return res.status(200).json({ options })
+    return res.status(200).json(options)
   } catch (error) {
     console.error(error)
     return res.status(400).send({ error: error })
@@ -143,11 +146,11 @@ export const verifyAuthentication = async (req: express.Request, res: express.Re
 
     const users = await getUserByEmail(email)
 
-    if (!users || users.length === 0) return res.sendStatus(400)
+    if (!users || users.length === 0) return res.status(400).json({ message: 'User not found' })
 
     const { id } = users[0]
 
-    const expectedChallenge = await getRegistrationChallenge(id)
+    const expectedChallenge = await getAuthenticationByUserId(id)
     const userPasskeys: Passkey[] = await getUserPasskeys(id)
 
     if (!expectedChallenge) {
@@ -162,12 +165,12 @@ export const verifyAuthentication = async (req: express.Request, res: express.Re
 
     const verification = await verifyAuthenticationResponse({
       response: body,
-      expectedChallenge: expectedChallenge,
+      expectedChallenge: expectedChallenge.challenge,
       expectedOrigin: passkeyRPConfigs.origin,
       expectedRPID: passkeyRPConfigs.rpID,
       credential: {
         id: passkey.id,
-        publicKey: new Uint8Array(Buffer.from(passkey.publicKey)),
+        publicKey: new Uint8Array(Buffer.from(passkey.publicKey, 'hex')),
         counter: passkey.counter,
         transports: passkey.transports ? (passkey.transports.split(',') as AuthenticatorTransportFuture[]) : undefined
       }
@@ -180,7 +183,7 @@ export const verifyAuthentication = async (req: express.Request, res: express.Re
 
     await saveUpdatedCounter(passkey, newCounter)
 
-    return res.status(200).json({ verified })
+    return res.status(200).json({ verified, email, token: generateJWTToken(id) })
   } catch (error) {
     console.error(error)
     return res.status(400).send({ error: error })

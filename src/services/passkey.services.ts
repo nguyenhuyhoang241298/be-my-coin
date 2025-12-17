@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import db from '~/models'
-import { NewPasskey, passkeyRegistrations, passkeys } from '~/models/schemas/passkey'
+import { NewPasskey, passkeyAuthentication, passkeyRegistrations, passkeys } from '~/models/schemas/passkey'
 
 export const getUserPasskeys = async (userId: number) => {
   return await db.select().from(passkeys).where(eq(passkeys.userId, userId))
@@ -14,11 +14,20 @@ export const saveUpdatedCounter = async (passkey: { id: string }, newCounter: nu
   await db.update(passkeys).set({ counter: newCounter }).where(eq(passkeys.id, passkey.id))
 }
 
-export const saveRegistrationChallenge = async (userId: number, challenge: string) => {
+export const saveRegistrationChallenge = async (userId: number, challenge: string, optionUserId: string) => {
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
 
   await db
     .insert(passkeyRegistrations)
+    .values({ userId, challenge, expiresAt, optionUserId })
+    .onDuplicateKeyUpdate({ set: { challenge, expiresAt, optionUserId } })
+}
+
+export const saveAuthenticationChallenge = async (userId: number, challenge: string) => {
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+
+  await db
+    .insert(passkeyAuthentication)
     .values({ userId, challenge, expiresAt })
     .onDuplicateKeyUpdate({ set: { challenge, expiresAt } })
 }
@@ -31,6 +40,26 @@ export const getRegistrationChallenge = async (userId: number) => {
   }
 
   return record.challenge
+}
+
+export const getRegistrationByUserId = async (userId: number) => {
+  const [record] = await db.select().from(passkeyRegistrations).where(eq(passkeyRegistrations.userId, userId))
+
+  if (!record || new Date(record.expiresAt) < new Date()) {
+    return null
+  }
+
+  return record
+}
+
+export const getAuthenticationByUserId = async (userId: number) => {
+  const [record] = await db.select().from(passkeyAuthentication).where(eq(passkeyAuthentication.userId, userId))
+
+  if (!record || new Date(record.expiresAt) < new Date()) {
+    return null
+  }
+
+  return record
 }
 
 export const deleteRegistrationChallenge = async (userId: number) => {
