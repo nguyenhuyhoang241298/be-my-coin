@@ -33,6 +33,14 @@ export const RequestMagicLinkDTO = z.object({
   email: z.string().email()
 })
 
+export const GetAuthenticationOptionsDTO = z.object({
+  email: z.string().email()
+})
+
+export const VerifyAuthenticationDTO = z.object({
+  email: z.string().email()
+})
+
 export const VerifyMagicLinkDTO = z.object({
   email: z.string().email(),
   accessToken: z.string().min(1)

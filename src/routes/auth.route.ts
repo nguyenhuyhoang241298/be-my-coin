@@ -4,6 +4,12 @@ import { googleLogin } from '~/controllers/auth/googleLogin.controllers'
 import { login, loginWith2FA } from '~/controllers/auth/login.controllers'
 import { logout } from '~/controllers/auth/logout.controllers'
 import { requestMagicLink, verifyMagicLink } from '~/controllers/auth/magicLink.controllers'
+import {
+  getAuthenticationOptions,
+  getPasskeyOptions,
+  verifyAuthentication,
+  verifyRegistration
+} from '~/controllers/auth/passkey.controllers'
 import { refreshToken } from '~/controllers/auth/refresh.controllers'
 import { register, verifyRegisterOtp } from '~/controllers/auth/register.controllers'
 import { verify2FA } from '~/controllers/auth/verify2FA.controllers'
@@ -33,5 +39,11 @@ authRouter.post('/login-2fa', loginWith2FA)
 
 authRouter.post('/request-magic-link', requestMagicLink)
 authRouter.post('/verify-magic-link', verifyMagicLink)
+
+// Passkey Auth
+authRouter.get('/passkey-options', isAuthenticated(), getPasskeyOptions)
+authRouter.post('/registration', isAuthenticated(), verifyRegistration)
+authRouter.get('/authentication-options', getAuthenticationOptions)
+authRouter.post('/authentication', verifyAuthentication)
 
 export default authRouter
