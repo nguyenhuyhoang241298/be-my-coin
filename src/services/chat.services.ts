@@ -1,11 +1,18 @@
-import { Socket } from 'socket.io'
-
-class ChatServices {
-  connection(socket: Socket) {
-    socket.on('chat', (message: string) => {
-      _io.emit('chat', message)
-    })
-  }
+export interface ServerToClientEvents {
+  noArg: () => void
+  basicEmit: (a: number, b: string, c: Buffer) => void
+  withAck: (d: string, callback: (e: number) => void) => void
 }
 
-export default new ChatServices()
+export interface ClientToServerEvents {
+  hello: () => void
+}
+
+export interface InterServerEvents {
+  ping: () => void
+}
+
+export interface SocketData {
+  name: string
+  age: number
+}
