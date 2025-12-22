@@ -9,13 +9,9 @@ const minioClient = new minio.Client({
   secretKey: process.env.MINIO_SECRET
 })
 
-export const getPresignedGetUrlService = async (bucketName: string, objectName: string, expiry?: number) => {
-  const url = await minioClient.presignedGetObject(bucketName, objectName, expiry)
-  return replaceMinioUrl(url)
-}
-
 export const getPresignedPutUrlService = async (bucketName: string, objectName: string, expiry?: number) => {
   const url = await minioClient.presignedPutObject(bucketName, objectName, expiry)
+  console.log('url', url)
   return replaceMinioUrl(url)
 }
 export default minioClient
