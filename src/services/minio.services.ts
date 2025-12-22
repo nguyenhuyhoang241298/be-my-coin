@@ -1,4 +1,5 @@
 import * as minio from 'minio'
+import { replaceMinioUrl } from './helpers'
 
 const minioClient = new minio.Client({
   endPoint: process.env.MINIO_ENDPOINT!,
@@ -9,10 +10,12 @@ const minioClient = new minio.Client({
 })
 
 export const getPresignedGetUrlService = async (bucketName: string, objectName: string, expiry?: number) => {
-  return await minioClient.presignedGetObject(bucketName, objectName, expiry)
+  const url = await minioClient.presignedGetObject(bucketName, objectName, expiry)
+  return replaceMinioUrl(url)
 }
 
 export const getPresignedPutUrlService = async (bucketName: string, objectName: string, expiry?: number) => {
-  return await minioClient.presignedPutObject(bucketName, objectName, expiry)
+  const url = await minioClient.presignedPutObject(bucketName, objectName, expiry)
+  return replaceMinioUrl(url)
 }
 export default minioClient
