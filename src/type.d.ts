@@ -1,5 +1,3 @@
-import { Server, Socket } from 'socket.io'
-
 type HttpErrorCode =
   | 'BAD_REQUEST'
   | 'UNAUTHORIZED'
@@ -21,20 +19,3 @@ type HttpErrorCode =
 type BackendErrorCode = 'VALIDATION_ERROR' | 'USER_NOT_FOUND' | 'INVALID_PASSWORD'
 
 type ErrorCode = HttpErrorCode | BackendErrorCode | 'INTERNAL_ERROR'
-
-interface ServerToClientEvents {
-  chat: (message: string) => void
-}
-
-interface ClientToServerEvents {
-  chat: (message: string) => void
-  connection: (socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>) => void
-}
-
-interface InterServerEvents {}
-
-interface SocketData {}
-
-declare global {
-  var _io: Server
-}

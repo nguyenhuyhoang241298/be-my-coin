@@ -39,4 +39,8 @@ jobs:
             -e SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} \
             -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
             -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            -e MINIO_ENDPOINT=${{ secrets.MINIO_ENDPOINT }} \
+            -e MINIO_PORT=${{ secrets.MINIO_PORT }} \
+            -e MINIO_ACCESS=${{ secrets.MINIO_ACCESS }} \
+            -e MINIO_SECRET=${{ secrets.MINIO_SECRET }} \
             be-my-coin:latest

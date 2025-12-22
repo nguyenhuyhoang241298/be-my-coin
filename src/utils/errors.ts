@@ -1,7 +1,6 @@
 const consola = require('consola')
 import type { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
-import { ErrorCode } from '~/type'
 
 export function getStatusFromErrorCode(code: ErrorCode): number {
   switch (code) {

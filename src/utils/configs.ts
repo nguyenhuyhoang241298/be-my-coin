@@ -8,3 +8,9 @@ export const passkeyRPConfigs = {
   rpID: process.env.NODE_ENV === 'production' ? 'huyhoang.me' : 'localhost',
   origin: process.env.NODE_ENV === 'production' ? 'https://huyhoang.me' : 'http://localhost:3000'
 }
+
+export const socketConfigs = {
+  cors: {
+    origin: ['http://localhost:3000', 'https://huyhoang.me']
+  }
+}
