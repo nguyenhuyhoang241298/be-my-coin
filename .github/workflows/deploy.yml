@@ -44,4 +44,7 @@ jobs:
             -e MINIO_ACCESS=${{ secrets.MINIO_ACCESS }} \
             -e MINIO_SECRET=${{ secrets.MINIO_SECRET }} \
             -e MINIO_PUBLIC_URL=${{ secrets.MINIO_PUBLIC_URL }} \
+            -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+            -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
+            -e REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} \
             be-my-coin:latest
