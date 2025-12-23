@@ -8,10 +8,9 @@ import createError from 'http-errors'
 import logger from 'morgan'
 import { createServer } from 'node:http'
 import path from 'node:path'
-import { Server } from 'socket.io'
+import { getCookEmailWorker, upsertCookEmailJob } from './jobs/email/cook.jobs'
 import appRouter from './routes'
-import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './services/chat.services'
-import { corsOptions, socketConfigs } from './utils/configs'
+import { corsOptions } from './utils/configs'
 import { errorHandler } from './utils/errors'
 
 const app = express()
@@ -42,14 +41,12 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 })
 
 const server = createServer(app)
-const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, socketConfigs)
-
-io.on('connection', (socket) => {
-  console.log('a user connected')
-})
 
 server.listen(process.env.PORT, async () => {
   console.log('Server running at port ' + process.env.PORT)
+
+  await upsertCookEmailJob()
+  getCookEmailWorker()
 })
 
 export { app, server }
