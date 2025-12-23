@@ -23,7 +23,7 @@ export const getCookEmailWorker = () => {
     async (job) => {
       console.log(`Processing repeat job ${job.id} of type ${job.name} with data:`)
       await sendEmail({
-        to: 'nguyenhuyhoang241298@gmail.com',
+        to: 'nguyenmai198.hust@gmail.com',
         subject: 'Nhắc nhở về sớm nấu cơm tối',
         html: `<!doctype html>
 <html lang="vi">
